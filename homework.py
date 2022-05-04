@@ -6,16 +6,21 @@ class InfoMessage:
 class Training:
     """Базовый класс тренировки."""
 
+    LEN_STEP: float = 0.65
+    M_IN_KM: int = 1000
+
     def __init__(self,
                  action: int,
                  duration: float,
                  weight: float,
                  ) -> None:
-        pass
+        self.action = action
+        self.duration = duration
+        self.weight = weight
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        pass
+        return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
@@ -41,6 +46,7 @@ class SportsWalking(Training):
 
 
 class Swimming(Training):
+    LEN_STEP: float = 1.38
     """Тренировка: плавание."""
     pass
 
@@ -65,4 +71,3 @@ if __name__ == '__main__':
     for workout_type, data in packages:
         training = read_package(workout_type, data)
         main(training)
-
