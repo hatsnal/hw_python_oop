@@ -61,12 +61,10 @@ class Running(Training):
                 self.weight / self.M_IN_KM * self.duration * self.HOU_TO_MIN)
 
 
+@dataclass
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-
-    def __init__(self, action, duration, weight, height: float) -> None:
-        super().__init__(action, duration, weight)
-        self.height = height
+    height: float
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
