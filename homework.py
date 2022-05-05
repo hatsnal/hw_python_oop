@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 
+from typing import Dict, Type, Union
+
 
 @dataclass
 class InfoMessage:
@@ -95,12 +97,24 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    if workout_type == 'SWM':
-        return Swimming(*data)
-    elif workout_type == 'RUN':
-        return Running(*data)
-    elif workout_type == 'WLK':
-        return SportsWalking(*data)
+    # training_type: Dict[str, Union[Swimming, Running, SportsWalking]] = {
+    #     'SWM': Swimming(*data),
+    #     'RUN': Running(*data),
+    #     'WLK': SportsWalking(*data)
+    # }
+    # return training_type.get(workout_type, 'Неверный код тренировки')
+    training_dict = {
+        'SWM': Swimming,
+        'RUN': Running,
+        'WLK': SportsWalking
+    }
+    return training_dict.get(workout_type)(*data)
+    # if workout_type == 'SWM':
+    #     return Swimming(*data)
+    # elif workout_type == 'RUN':
+    #     return Running(*data)
+    # elif workout_type == 'WLK':
+    #     return SportsWalking(*data)
 
 
 def main(training: Training) -> None:
