@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -24,9 +24,9 @@ class Training:
     action: int
     duration: float
     weight: float
-    LEN_STEP: float = 0.65
-    M_IN_KM: int = 1000
-    HOU_TO_MIN: int = 60
+    LEN_STEP: float = field(default=0.65, init=False)
+    M_IN_KM: int = field(default=1000, init=False)
+    HOU_TO_MIN: int = field(default=60, init=False)
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
@@ -75,19 +75,16 @@ class SportsWalking(Training):
         coeff_02 = 2
         coeff_03 = 0.029
         return (coeff_01 * self.weight +
-                (self.get_mean_speed()**coeff_02 // self.height) *
+                (self.get_mean_speed() ** coeff_02 // self.height) *
                 coeff_03 * self.weight) * self.duration * self.HOU_TO_MIN
 
 
+@dataclass
 class Swimming(Training):
     """Тренировка: плавание."""
-    LEN_STEP: float = 1.38
-
-    def __init__(self, action, duration, weight, length_pool: float,
-                 count_pool: int) -> None:
-        super().__init__(action, duration, weight)
-        self.length_pool = length_pool
-        self.count_pool = count_pool
+    length_pool: float
+    count_pool: float
+    LEN_STEP: float = field(default=1.38, init=False)
 
     def get_mean_speed(self) -> float:
         super().get_mean_speed()
