@@ -1,7 +1,5 @@
 from dataclasses import dataclass, field
 
-from typing import Dict, Type, Union
-
 
 @dataclass
 class InfoMessage:
@@ -62,28 +60,34 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
+    RUN_COEF_FIRST: float = 18
+    RUN_COEF_SEC: float = 20
 
     def get_spent_calories(self):
         """Получить количество затраченных калорий."""
-        coeff_calorie_1 = 18
-        coeff_calorie_2 = 20
-        return ((coeff_calorie_1 * self.get_mean_speed() - coeff_calorie_2)
-                * self.weight / self.M_IN_KM * self.duration * self.HOU_TO_MIN)
+        return (
+                (self.RUN_COEF_FIRST * self.get_mean_speed()
+                 - self.RUN_COEF_SEC)
+                * self.weight / self.M_IN_KM * self.duration * self.HOU_TO_MIN
+        )
 
 
 @dataclass
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     height: float
+    SWLK_COEF_FIRST: float = 0.035
+    SWLK_COEF_SEC: float = 2
+    SWLK_COEF_THIRD: float = 0.029
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        coeff_01 = 0.035
-        coeff_02 = 2
-        coeff_03 = 0.029
-        return (coeff_01 * self.weight
-                + (self.get_mean_speed() ** coeff_02 // self.height)
-                * coeff_03 * self.weight) * self.duration * self.HOU_TO_MIN
+        return (
+                (self.SWLK_COEF_FIRST * self.weight
+                 + (self.get_mean_speed() ** self.SWLK_COEF_SEC // self.height)
+                 * self.SWLK_COEF_THIRD * self.weight) * self.duration
+                * self.HOU_TO_MIN
+        )
 
 
 @dataclass
@@ -92,6 +96,8 @@ class Swimming(Training):
     length_pool: float
     count_pool: float
     LEN_STEP: float = field(default=1.38, init=False)
+    SWM_COEF_FIRST: float = 1.1
+    SWM_COEF_SEC: float = 2
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
@@ -101,10 +107,8 @@ class Swimming(Training):
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        spent_calories_coeff01 = 1.1
-        spent_calories_coeff02 = 2
-        return ((self.get_mean_speed() + spent_calories_coeff01)
-                * spent_calories_coeff02 * self.weight)
+        return ((self.get_mean_speed() + self.SWM_COEF_FIRST)
+                * self.SWM_COEF_SEC * self.weight)
 
 
 def read_package(workout_type: str, data: list) -> Training:
@@ -117,9 +121,7 @@ def read_package(workout_type: str, data: list) -> Training:
         }
         return training_dict.get(workout_type)(*data)
     except TypeError:
-        print('ошибко')
-
-
+        print('[-] В словаре нету указаного вами кода тренировки.')
 
 
 def main(training: Training) -> None:
@@ -127,7 +129,7 @@ def main(training: Training) -> None:
     try:
         print(training.show_training_info().get_message())
     except AttributeError:
-        print('Что то пошло не так...')
+        print('[-] Передано неправильное количество атрибутов.')
 
 
 if __name__ == '__main__':
