@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 
 
 @dataclass
@@ -9,6 +9,11 @@ class InfoMessage:
     distance: float
     speed: float
     calories: float
+    message = ('Тип тренировки: {}; '
+               'Длительность: {:.3f}; '
+               'Дистанция: {:.3f}; '
+               'Ср. скорость {:.3f}; '
+               'Потрачено ккал {:.3f}.')
 
     def get_message(self) -> str:
         """Метод возврата результата тренировки.
@@ -20,11 +25,7 @@ class InfoMessage:
         speed -- скорость в км/ч
         calories -- количество затреченных ккал за тренировку
         """
-        return (f'Тип тренировки: {self.training_type};'
-                f' Длительность: {self.duration:.3f} ч.;'
-                f' Дистанция: {self.distance:.3f} км; '
-                f'Ср. скорость: {self.speed:.3f} км/ч;'
-                f' Потрачено ккал: {self.calories:.3f}.')
+        return self.message.format(*asdict(self).values())
 
 
 @dataclass
