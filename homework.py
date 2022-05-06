@@ -13,6 +13,15 @@ class InfoMessage:
     calories: float
 
     def get_message(self) -> str:
+        """Метод возврата результата тренировки.
+
+        Keywords arguments:
+        training_type -- тип тренировки
+        duration -- продолжительность тренировки в часах
+        distance -- пройденая дистанция в КМ
+        speed -- скорость в км/ч
+        calories -- количество затреченных ккал за тренировку
+        """
         return (f'Тип тренировки: {self.training_type};'
                 f' Длительность: {self.duration:.3f} ч.;'
                 f' Дистанция: {self.distance:.3f} км; '
@@ -55,6 +64,7 @@ class Running(Training):
     """Тренировка: бег."""
 
     def get_spent_calories(self):
+        """Получить количество затраченных калорий."""
         coeff_calorie_1 = 18
         coeff_calorie_2 = 20
         return ((coeff_calorie_1 * self.get_mean_speed() - coeff_calorie_2)
@@ -84,11 +94,13 @@ class Swimming(Training):
     LEN_STEP: float = field(default=1.38, init=False)
 
     def get_mean_speed(self) -> float:
+        """Получить среднюю скорость движения."""
         super().get_mean_speed()
         return (self.length_pool * self.count_pool
                 / self.M_IN_KM / self.duration)
 
     def get_spent_calories(self) -> float:
+        """Получить количество затраченных калорий."""
         spent_calories_coeff01 = 1.1
         spent_calories_coeff02 = 2
         return ((self.get_mean_speed() + spent_calories_coeff01)
@@ -97,24 +109,32 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_dict = {
-        'SWM': Swimming,
-        'RUN': Running,
-        'WLK': SportsWalking
-    }
-    return training_dict.get(workout_type)(*data)
+    try:
+        training_dict = {
+            'SWM': Swimming,
+            'RUN': Running,
+            'WLK': SportsWalking,
+        }
+        return training_dict.get(workout_type)(*data)
+    except TypeError:
+        print('ошибко')
+
+
 
 
 def main(training: Training) -> None:
     """Главная функция."""
-    print(training.show_training_info().get_message())
+    try:
+        print(training.show_training_info().get_message())
+    except AttributeError:
+        print('Что то пошло не так...')
 
 
 if __name__ == '__main__':
     packages = [
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
-        ('WLK', [9000, 1, 75, 180]),
+        ('WLK', [9000, 1, 75, 180])
     ]
 
     for workout_type, data in packages:
