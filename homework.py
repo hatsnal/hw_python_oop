@@ -1,6 +1,18 @@
 from dataclasses import dataclass, field, asdict
 
 
+class Bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
@@ -118,7 +130,8 @@ def read_package(workout_type: str, data: list) -> Training:
         }
         return training_dict.get(workout_type)(*data)
     except TypeError:
-        print('[-] В словаре нету указаного вами кода тренировки.')
+        print(f'{Bcolors.WARNING}[ERROR] В словаре не найден ключ '
+              f'тренировки: {workout_type}.')
 
 
 def main(training: Training) -> None:
@@ -126,14 +139,15 @@ def main(training: Training) -> None:
     try:
         print(training.show_training_info().get_message())
     except AttributeError:
-        print('[-] Передано неправильное количество атрибутов.')
+        print(f'[ERROR] Невозможно создать объект для {workout_type}.')
 
 
 if __name__ == '__main__':
     packages = [
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
-        ('WLK', [9000, 1, 75, 180])
+        ('WLK', [9000, 1, 75, 180]),
+        ('WLKL', [9000, 1, 75, 180])
     ]
 
     for workout_type, data in packages:
