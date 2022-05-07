@@ -21,23 +21,17 @@ class InfoMessage:
     distance: float
     speed: float
     calories: float
-    message: str = ('Тип тренировки: {}; '
-                    'Длительность: {:.3f} ч.; '
-                    'Дистанция: {:.3f} км; '
-                    'Ср. скорость: {:.3f} км/ч; '
-                    'Потрачено ккал: {:.3f}.')
+    MESSAGE: str = (
+        'Тип тренировки: {training_type};'
+        ' Длительность: {duration:.3f} ч.;'
+        ' Дистанция: {distance:.3f} км;'
+        ' Ср. скорость: {speed:.3f} км/ч;'
+        ' Потрачено ккал: {calories:.3f}.'
+    )
 
     def get_message(self) -> str:
-        """Метод возврата результата тренировки.
-
-        Keywords arguments:
-        training_type -- тип тренировки
-        duration -- продолжительность тренировки в часах
-        distance -- пройденая дистанция в КМ
-        speed -- скорость в км/ч
-        calories -- количество затреченных ккал за тренировку
-        """
-        return self.message.format(*asdict(self).values())
+        """Метод возврата результата тренировки."""
+        return self.MESSAGE.format(**asdict(self))
 
 
 @dataclass
@@ -110,7 +104,6 @@ class Swimming(Training):
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        super().get_mean_speed()
         return (self.length_pool * self.count_pool
                 / self.M_IN_KM / self.duration)
 
@@ -128,7 +121,9 @@ def read_package(workout_type: str, data: list) -> Training:
             'RUN': Running,
             'WLK': SportsWalking,
         }
+
         return training_dict.get(workout_type)(*data)
+
     except TypeError:
         print(f'{Bcolors.WARNING}[ERROR] В словаре не найден ключ '
               f'тренировки: {workout_type}.')
@@ -147,7 +142,6 @@ if __name__ == '__main__':
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
         ('WLK', [9000, 1, 75, 180]),
-        ('WLKL', [9000, 1, 75, 180])
     ]
 
     for workout_type, data in packages:
