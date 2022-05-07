@@ -4,7 +4,7 @@ from typing import ClassVar
 
 class Bcolors:
     """Класс, окрашивающий строку"""
-    
+
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKCYAN = '\033[96m'
@@ -19,7 +19,7 @@ class Bcolors:
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-    
+
     training_type: str
     duration: float
     distance: float
@@ -41,7 +41,7 @@ class InfoMessage:
 @dataclass
 class Training:
     """Базовый класс тренировки."""
-    
+
     action: int
     duration: float
     weight: float
@@ -72,7 +72,7 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    
+
     RUN_COEF_FIRST: ClassVar[float] = 18
     RUN_COEF_SEC: ClassVar[float] = 20
 
@@ -86,7 +86,7 @@ class Running(Training):
 @dataclass
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    
+
     height: float
     SWLK_COEF_FIRST: ClassVar[float] = 0.035
     SWLK_COEF_SEC: ClassVar[float] = 2
@@ -103,7 +103,7 @@ class SportsWalking(Training):
 @dataclass
 class Swimming(Training):
     """Тренировка: плавание."""
-    
+
     length_pool: float
     count_pool: float
     LEN_STEP: ClassVar[float] = field(default=1.38, init=False)
