@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field, asdict, fields
 from typing import ClassVar
 
 
@@ -120,28 +120,28 @@ class Swimming(Training):
                 * self.SWM_COEF_SEC * self.weight)
 
 
+TRAINING_DICT = {
+    'SWM': (Swimming, len(fields(Swimming))),
+    'RUN': (Running, len(fields(Running))),
+    'WLK': (SportsWalking, len(fields(SportsWalking))),
+}
+
+
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    try:
-        training_dict = {
-            'SWM': Swimming,
-            'RUN': Running,
-            'WLK': SportsWalking,
-        }
+    training_class, class_atrr_len = TRAINING_DICT.get(workout_type)
+    if workout_type not in TRAINING_DICT:
+        raise 'Код тренировки не найден в словаре'
 
-        return training_dict.get(workout_type)(*data)
+    if class_atrr_len != len(data):
+        raise 'Неправильное количество аргументов в data'
 
-    except TypeError:
-        print(f'{Bcolors.WARNING}[ERROR] В словаре не найден ключ '
-              f'тренировки: {workout_type}.')
+    return training_class(*data)
 
 
 def main(training: Training) -> None:
     """Главная функция."""
-    try:
-        print(training.show_training_info().get_message())
-    except AttributeError:
-        print(f'[ERROR] Невозможно создать объект для {workout_type}.')
+    print(training.show_training_info().get_message())
 
 
 if __name__ == '__main__':
