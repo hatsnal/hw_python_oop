@@ -86,7 +86,6 @@ class Running(Training):
 @dataclass
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-
     height: float
     SWLK_COEF_FIRST: ClassVar[float] = 0.035
     SWLK_COEF_SEC: ClassVar[float] = 2
